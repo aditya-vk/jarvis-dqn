@@ -1,8 +1,7 @@
-# #!/usr/bin/python3.5
-
 import numpy
 import gym
 
+# Initialize the environment
 env = gym.make('FrozenLake-v0')
 
 # Initialize table with all zeros
@@ -14,9 +13,11 @@ discountFactor = 0.95
 numberOfEpisodes = 2000
 timeOut = 100
 
+# Container to store returns at the end of every episode
 returnList = []
 
-for i in range(numberOfEpisodes):
+episodeNumber = 0
+while episodeNumber <= numberOfEpisodes:
 
 	# Initial State
   state = env.reset()
@@ -25,7 +26,7 @@ for i in range(numberOfEpisodes):
   for j in range(timeOut):
 
   	# Choose the best action with some noise. Noise decreases with episode number
-    a = numpy.argmax(Q[state,:] + numpy.random.randn(1,env.action_space.n)*(1./(i + 1)))
+    a = numpy.argmax(Q[state,:] + numpy.random.randn(1,env.action_space.n)*(1./(episodeNumber + 1)))
 
     #Get new state and reward from environment
     newState, reward, isGoal, _ = env.step(a)
@@ -37,7 +38,12 @@ for i in range(numberOfEpisodes):
     if isGoal == True:
       break
 
+  # Repeat episode if failed to converge with success
+  if isGoal:
+  	episodeNumber += 1
+
   returnList.append(cumulativeReward)
 
-print Q
-print "Score over time: " +  str(sum(returnList)/numberOfEpisodes)
+# Print results
+print(Q)
+print("Score over time: " +  str(sum(returnList)/numberOfEpisodes))
