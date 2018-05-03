@@ -77,6 +77,7 @@ class Agent:
     if random.random() < self.epsilon:
       return random.randint(0, self.actionCnt-1)
     else:
+      # TODO (avk): Change this
       return numpy.argmax(self.brain.predictOne(s))
     self.steps += 1
     self.epsilon = min_epsilon + (max_epsilon - min_epsilon) * math.exp(-lamda * self.steps)
